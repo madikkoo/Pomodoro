@@ -5,13 +5,14 @@ import (
 	"net/http"
 )
 
-type msg string
-
-func (m msg) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
-	fmt.Fprint(resp, m)
-}
 func main() {
-	msgHandler := msg("Hello from Web Server in Go")
+
+	http.HandleFunc("/about", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "static/about.html")
+	})
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "static/index.html")
+	})
 	fmt.Println("Server is listening...")
-	http.ListenAndServe("localhost:8181", msgHandler)
+	http.ListenAndServe(":8181", nil)
 }
